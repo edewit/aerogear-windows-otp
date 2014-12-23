@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Graphics.Display;
 using Windows.Media.Capture;
@@ -26,6 +27,7 @@ namespace Shoot
     public sealed partial class MainPage : Page, IWebAuthenticationContinuable
     {
         private MediaCapture captureMgr { get; set; }
+        public bool IsPreviewing { get; set; }
         public static MainPage instance;
         public StorageFile file { get; set; }
 
@@ -57,6 +59,7 @@ namespace Shoot
             await captureMgr.InitializeAsync();
             capturePreview.Source = captureMgr;
             await captureMgr.StartPreviewAsync();
+            IsPreviewing = true;
 
             DisplayInformation displayInfo = DisplayInformation.GetForCurrentView();
             displayInfo.OrientationChanged += DisplayInfo_OrientationChanged;
@@ -110,6 +113,7 @@ namespace Shoot
             var bitmap = new BitmapImage();
             bitmap.SetSource(await file.OpenReadAsync());
             shot.Source = bitmap;
+            await CleanupCaptureResources();
 
             VisualStateManager.GoToState(this, "Taken", true);
         }
@@ -143,6 +147,34 @@ namespace Shoot
         private void DisplayInfo_OrientationChanged(DisplayInformation sender, object args)
         {
             captureMgr.SetPreviewRotation(VideoRotationLookup(sender.CurrentOrientation, false));
+        }
+
+        private async void OnSuspending(object sender, SuspendingEventArgs e)
+        {
+            var deferral = e.SuspendingOperation.GetDeferral();
+
+            //cleanup camera resources
+            await CleanupCaptureResources();
+
+            deferral.Complete();
+        }
+
+        public async Task CleanupCaptureResources()
+        {
+            if (IsPreviewing && captureMgr != null)
+            {
+                await captureMgr.StopPreviewAsync();
+                IsPreviewing = false;
+            }
+
+            if (captureMgr != null)
+            {
+                if (capturePreview != null)
+                {
+                    capturePreview.Source = null;
+                }
+                captureMgr.Dispose();
+            }
         }
 
         private VideoRotation VideoRotationLookup(DisplayOrientations displayOrientation, bool counterclockwise)
