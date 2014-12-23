@@ -84,7 +84,6 @@ namespace Shoot
             {
                 case ApplicationViewOrientation.Landscape:
                     grid.RowDefinitions.Clear();
-                    captureMgr.SetPreviewRotation(VideoRotation.Clockwise180Degrees);
                     grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
                     grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(177) });
                     shareBar.ColumnDefinitions.Clear();
@@ -93,7 +92,6 @@ namespace Shoot
                     break;
 
                 case ApplicationViewOrientation.Portrait:
-                    captureMgr.SetPreviewRotation(VideoRotation.Clockwise90Degrees);
                     grid.ColumnDefinitions.Clear();
                     grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) });
                     grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(177) });
