@@ -1,18 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+﻿using Shoot.Common;
+using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
@@ -35,6 +26,30 @@ namespace Shoot
         {
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
+        }
+
+        protected async override void OnActivated(IActivatedEventArgs args)
+        {
+            if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
+            {
+                // Restore the saved session state only when appropriate
+                try
+                {
+                    await SuspensionManager.RestoreAsync();
+                }
+                catch (SuspensionManagerException)
+                {
+                    //Something went wrong restoring state.
+                    //Assume there is no state and continue
+                }
+            }
+
+            if (args.Kind == ActivationKind.WebAuthenticationBrokerContinuation)
+            {
+                //get a reference to the page as IWebAuthenticationContinuable
+                var wabPage = MainPage.instance as IWebAuthenticationContinuable;
+                wabPage.ContinueWebAuthentication(args as WebAuthenticationBrokerContinuationEventArgs);
+            }
         }
 
         /// <summary>
@@ -120,12 +135,23 @@ namespace Shoot
         /// </summary>
         /// <param name="sender">The source of the suspend request.</param>
         /// <param name="e">Details about the suspend request.</param>
-        private void OnSuspending(object sender, SuspendingEventArgs e)
+        private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
 
             // TODO: Save application state and stop any background activity
+            await SuspensionManager.SaveAsync();
             deferral.Complete();
         }
+    }
+
+    interface IWebAuthenticationContinuable
+    {
+        /// <summary>
+        /// This method is invoked when the web authentication broker returns
+        /// with the authentication result
+        /// </summary>
+        /// <param name="args">Activated event args object that contains returned authentication token</param>
+        void ContinueWebAuthentication(WebAuthenticationBrokerContinuationEventArgs args);
     }
 }

@@ -1,22 +1,18 @@
-﻿using System;
+﻿using AeroGear.OAuth2;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using System.Net;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.Activation;
 using Windows.Graphics.Display;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
 using Windows.Storage;
-using Windows.Storage.Streams;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
@@ -27,9 +23,11 @@ namespace Shoot
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage : Page, IWebAuthenticationContinuable
     {
         private MediaCapture captureMgr { get; set; }
+        public static MainPage instance;
+        public StorageFile file { get; set; }
 
         public MainPage()
         {
@@ -37,6 +35,7 @@ namespace Shoot
             this.InitializeComponent();
 
             this.NavigationCacheMode = NavigationCacheMode.Required;
+            instance = this;
         }
 
         /// <summary>
@@ -62,12 +61,50 @@ namespace Shoot
             DisplayInformation displayInfo = DisplayInformation.GetForCurrentView();
             displayInfo.OrientationChanged += DisplayInfo_OrientationChanged;
             DisplayInfo_OrientationChanged(displayInfo, null);
+
+            var config = await GoogleConfig.Create(
+                "517285908032-11moj33qbn01m7sem6g7gmfco2tp252v.apps.googleusercontent.com",
+                new List<string>(new string[] { "https://www.googleapis.com/auth/drive" }),
+                "google"
+            );
+
+            await AccountManager.AddAccount(config);
+        }
+
+        async void IWebAuthenticationContinuable.ContinueWebAuthentication(WebAuthenticationBrokerContinuationEventArgs args)
+        {
+            Upload(await AccountManager.ParseContinuationEvent(args));
+        }
+
+        private async void Upload(OAuth2Module module)
+        {
+            var request = AuthzWebRequest.Create("https://www.googleapis.com/upload/drive/v2/files", module);
+            request.Method = "POST";
+
+            using (var postStream = await Task<Stream>.Factory.FromAsync(request.BeginGetRequestStream, request.EndGetRequestStream, request))
+            {
+                using (var stream = await file.OpenAsync(FileAccessMode.Read))
+                {
+                    Stream s = stream.AsStreamForRead();
+                    s.CopyTo(postStream);
+                }
+            }
+
+            HttpWebResponse responseObject = (HttpWebResponse)await Task<WebResponse>.Factory.FromAsync(request.BeginGetResponse, request.EndGetResponse, request);
+            using (var responseStream = responseObject.GetResponseStream())
+            {
+                using (var streamReader = new StreamReader(responseStream))
+                {
+                    var response = await streamReader.ReadToEndAsync();
+                    Debug.WriteLine(response);
+                }
+            }
         }
 
         private async void TakePicture(object sender, RoutedEventArgs e)
         {
             var encodingProperties = ImageEncodingProperties.CreateJpeg();
-            StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("Photo.jpg", CreationCollisionOption.ReplaceExisting);
+            file = await ApplicationData.Current.LocalFolder.CreateFileAsync("Photo.jpg", CreationCollisionOption.ReplaceExisting);
 
             await captureMgr.CapturePhotoToStorageFileAsync(encodingProperties, file);
             var bitmap = new BitmapImage();
@@ -128,6 +165,16 @@ namespace Shoot
                 default:
                     return VideoRotation.None;
             }
+        }
+
+        private async void ShareGoogle_Click(object sender, RoutedEventArgs e)
+        {
+            var module = AccountManager.GetAccountByName("google");
+            if (await module.RequestAccessAndContinue())
+            {
+                Upload(module);
+            }
+
         }
     }
 }
