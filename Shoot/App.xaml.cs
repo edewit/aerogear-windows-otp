@@ -142,7 +142,9 @@ namespace Shoot
             var deferral = e.SuspendingOperation.GetDeferral();
 
             // TODO: Save application state and stop any background activity
+            await MainPage.instance.CleanupCaptureResources();
             await SuspensionManager.SaveAsync();
+
             deferral.Complete();
         }
 

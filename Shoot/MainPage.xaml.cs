@@ -176,13 +176,6 @@ namespace Shoot
             captureMgr.SetPreviewRotation(VideoRotationLookup(sender.CurrentOrientation, false));
         }
 
-        private async void OnSuspending(object sender, SuspendingEventArgs e)
-        {
-            var deferral = e.SuspendingOperation.GetDeferral();
-            await CleanupCaptureResources();
-            deferral.Complete();
-        }
-
         public async Task CleanupCaptureResources()
         {
             if (IsPreviewing && captureMgr != null)
