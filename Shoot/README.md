@@ -40,8 +40,8 @@ When you use a self signed certificate you'll need to install it on the phone/em
 keytool -export -keystore keycloak.jks -alias localhost -file keycloak.cer
 ```
 
-![Click on the lock symbol](img/certificate-export1.png)
-![Copy to file](img/certificate-export2.png)
+![Click on the lock symbol](../img/certificate-export1.png)
+![Copy to file](../img/certificate-export2.png)
 
 Then put in the `keycloak.cer` file into the war file and install it on the phone by visiting `http://<ip>:8080/shoot/keycloak.cer`
 
