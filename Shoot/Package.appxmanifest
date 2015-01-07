@@ -27,7 +27,7 @@
       </m3:VisualElements>
       <Extensions>
         <Extension Category="windows.protocol">
-          <Protocol Name="com.aerogear.oauth.test" />
+          <Protocol Name="org.aerogear.shoot" />
         </Extension>
       </Extensions>
     </Application>

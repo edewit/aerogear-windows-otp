@@ -4,13 +4,17 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Graphics.Display;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
+using Windows.Phone.UI.Input;
 using Windows.Storage;
+using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -30,6 +34,7 @@ namespace Shoot
         public bool IsPreviewing { get; set; }
         public static MainPage instance;
         public StorageFile file { get; set; }
+        public IDictionary<string, Uri> uploadLocation { get; set; }
 
         public MainPage()
         {
@@ -60,6 +65,7 @@ namespace Shoot
             capturePreview.Source = captureMgr;
             await captureMgr.StartPreviewAsync();
             IsPreviewing = true;
+            uploadLocation = new Dictionary<string, Uri>();
 
             DisplayInformation displayInfo = DisplayInformation.GetForCurrentView();
             displayInfo.OrientationChanged += DisplayInfo_OrientationChanged;
@@ -70,37 +76,54 @@ namespace Shoot
                 new List<string>(new string[] { "https://www.googleapis.com/auth/drive" }),
                 "google"
             );
-
+            uploadLocation.Add("google", new Uri("https://www.googleapis.com/upload/drive/v2/files"));
             await AccountManager.AddAccount(config);
+
+            var keyCloak = await KeycloakConfig.Create("shoot-third-party", "https://localhost:8443", "shoot-realm");
+            uploadLocation.Add("shoot-third-party", new Uri("https://localhost:8443/shoot/rest/photos"));
+            await AccountManager.AddKeyCloak(keyCloak);
+
+            var facebook = FacebookConfig.Create("YYY", "XXX",
+                    new List<string>(new string[] { "photo_upload, publish_actions" }), "facebook");
+            uploadLocation.Add("facebook", new Uri("https://graph.facebook.com/me/photos"));
+            await AccountManager.AddFacebook(facebook);
         }
 
         async void IWebAuthenticationContinuable.ContinueWebAuthentication(WebAuthenticationBrokerContinuationEventArgs args)
         {
-            Upload(await AccountManager.ParseContinuationEvent(args));
+            await Upload(await AccountManager.ParseContinuationEvent(args));
         }
 
-        private async void Upload(OAuth2Module module)
+        private async Task Upload(string moduleName)
         {
-            var request = AuthzWebRequest.Create("https://www.googleapis.com/upload/drive/v2/files", module);
-            request.Method = "POST";
-
-            using (var postStream = await Task<Stream>.Factory.FromAsync(request.BeginGetRequestStream, request.EndGetRequestStream, request))
+            var module = AccountManager.GetAccountByName(moduleName);
+            if (await module.RequestAccessAndContinue())
             {
-                using (var stream = await file.OpenAsync(FileAccessMode.Read))
-                {
-                    Stream s = stream.AsStreamForRead();
-                    s.CopyTo(postStream);
-                }
+                await Upload(module);
             }
+        }
 
-            HttpWebResponse responseObject = (HttpWebResponse)await Task<WebResponse>.Factory.FromAsync(request.BeginGetResponse, request.EndGetResponse, request);
-            using (var responseStream = responseObject.GetResponseStream())
+        private async Task Upload(OAuth2Module module)
+        {
+            using (var client = new HttpClient())
+            using (var content = new MultipartFormDataContent())
             {
-                using (var streamReader = new StreamReader(responseStream))
+                client.DefaultRequestHeaders.Authorization = module.AuthenticationHeaderValue();
+
+                var fileContent = new StreamContent((await file.OpenAsync(FileAccessMode.Read)).AsStreamForRead());
+                fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
                 {
-                    var response = await streamReader.ReadToEndAsync();
-                    Debug.WriteLine(response);
-                }
+                    Name = "\"image\"",
+                    FileName = "\"" + file.Name + "\""
+                };
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpg");
+
+                content.Add(fileContent);
+                HttpResponseMessage response = await client.PostAsync(uploadLocation[module.config.accountId], content);
+                string responseString = await response.Content.ReadAsStringAsync();
+
+                Debug.WriteLine(responseString);
+                await new MessageDialog("uploaded file " + (response.StatusCode != HttpStatusCode.OK ? "un" : "") + "successful").ShowAsync();
             }
         }
 
@@ -113,7 +136,7 @@ namespace Shoot
             var bitmap = new BitmapImage();
             bitmap.SetSource(await file.OpenReadAsync());
             shot.Source = bitmap;
-            await CleanupCaptureResources();
+            IsPreviewing = false;
 
             VisualStateManager.GoToState(this, "Taken", true);
         }
@@ -152,10 +175,7 @@ namespace Shoot
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-
-            //cleanup camera resources
             await CleanupCaptureResources();
-
             deferral.Complete();
         }
 
@@ -201,12 +221,23 @@ namespace Shoot
 
         private async void ShareGoogle_Click(object sender, RoutedEventArgs e)
         {
-            var module = AccountManager.GetAccountByName("google");
-            if (await module.RequestAccessAndContinue())
-            {
-                Upload(module);
-            }
+            await Upload("google");
+        }
 
+        private async void ShareKeycloak_Click(object sender, RoutedEventArgs e)
+        {
+            await Upload("shoot-third-party");
+        }
+
+        private async void ShareFacebook_Click(object sender, RoutedEventArgs e)
+        {
+            await Upload("facebook");
+        }
+
+        internal void GoBack()
+        {
+            VisualStateManager.GoToState(this, "Initial", true);
+            IsPreviewing = true;
         }
     }
 }

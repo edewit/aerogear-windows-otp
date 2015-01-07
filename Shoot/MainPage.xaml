@@ -29,7 +29,21 @@
                     </Storyboard>
                 </VisualState>
 
-                <VisualState x:Name="Portrait">
+                <VisualState x:Name="Initial">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="toolbar" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="capturePreview" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="shareBar" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="shot" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
                 </VisualState>
 
             </VisualStateGroup>
@@ -64,13 +78,13 @@
                 </Button.Background>
             </Button>
             <Border Background="#FF014E7C" Grid.Column="1" Grid.Row="1"/>
-            <Button BorderThickness="0" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center">
+            <Button BorderThickness="0" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" Click="ShareKeycloak_Click">
                 <Button.Background>
                     <ImageBrush ImageSource="Assets/keycloack-icon@2x.png" Stretch="Uniform"/>
                 </Button.Background>
             </Button>
             <Border Background="#FF3B5998" Grid.Column="2" Grid.Row="2"/>
-            <Button BorderThickness="0" Grid.Column="2" Grid.Row="2" HorizontalAlignment="Center">
+            <Button BorderThickness="0" Grid.Column="2" Grid.Row="2" HorizontalAlignment="Center" Click="ShareFacebook_Click">
                 <Button.Background>
                     <ImageBrush ImageSource="Assets/facebook-icon@2x.png" Stretch="Uniform"/>
                 </Button.Background>

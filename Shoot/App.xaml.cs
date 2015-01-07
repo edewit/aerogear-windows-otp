@@ -2,6 +2,7 @@
 using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Phone.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
@@ -26,6 +27,7 @@ namespace Shoot
         {
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
+            HardwareButtons.BackPressed += HardwareButtons_BackPressed;
         }
 
         protected async override void OnActivated(IActivatedEventArgs args)
@@ -142,6 +144,27 @@ namespace Shoot
             // TODO: Save application state and stop any background activity
             await SuspensionManager.SaveAsync();
             deferral.Complete();
+        }
+
+        private void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
+        {
+            Frame frame = Window.Current.Content as Frame;
+            if (frame == null)
+            {
+                return;
+            }
+
+            if (frame.Content is MainPage && !((MainPage)frame.Content).IsPreviewing)
+            {
+                ((MainPage)frame.Content).GoBack();
+                e.Handled = true;
+            }
+
+            if (frame.CanGoBack)
+            {
+                frame.GoBack();
+                e.Handled = true;
+            }
         }
     }
 
