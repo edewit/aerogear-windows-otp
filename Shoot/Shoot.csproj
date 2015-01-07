@@ -120,7 +120,10 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="aerogear-windows-oauth2">
-      <HintPath>..\packages\aerogear-windows-oauth2.0.0.1\lib\wpa\aerogear-windows-oauth2.dll</HintPath>
+      <HintPath>..\packages\aerogear-windows-oauth2.0.0.4\lib\wpa\aerogear-windows-oauth2.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.7\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
