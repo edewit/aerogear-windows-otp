@@ -105,6 +105,9 @@ namespace Shoot
 
         private async Task Upload(OAuth2Module module)
         {
+            var statusBar = StatusBar.GetForCurrentView();
+            statusBar.ProgressIndicator.Text = "Uploading";
+            await statusBar.ProgressIndicator.ShowAsync();
             using (var client = new HttpClient())
             using (var content = new MultipartFormDataContent())
             {
@@ -123,6 +126,7 @@ namespace Shoot
                 string responseString = await response.Content.ReadAsStringAsync();
 
                 Debug.WriteLine(responseString);
+                await statusBar.ProgressIndicator.HideAsync();
                 await new MessageDialog("uploaded file " + (response.StatusCode != HttpStatusCode.OK ? "un" : "") + "successful").ShowAsync();
             }
         }
