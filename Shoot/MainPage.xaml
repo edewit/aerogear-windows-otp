@@ -51,14 +51,14 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="177"/>
+            <RowDefinition Height="153"/>
         </Grid.RowDefinitions>
 
-        <CaptureElement Name="capturePreview" Stretch="UniformToFill" Grid.Row="0" Grid.Column="0"/>
-        <Image Name="shot" Stretch="Fill" Visibility="Collapsed"/>
+        <CaptureElement Name="capturePreview" Stretch="UniformToFill" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"/>
+        <Image Name="shot" Visibility="Collapsed"/>
         <Grid Name="toolbar" Grid.Row="1" Grid.Column="1">
             <Border BorderThickness="0" Background="#FFECF0F1"/>
-            <Button Click="TakePicture" HorizontalAlignment="Center" VerticalAlignment="Center" Height="112" BorderThickness="0" Margin="0,0,0,35">
+            <Button Click="TakePicture" HorizontalAlignment="Center" VerticalAlignment="Center" Height="112" BorderThickness="0">
                 <Button.Background>
                     <ImageBrush Stretch="Uniform" ImageSource="Assets/camera-icon@2x.png"/>
                 </Button.Background>
@@ -72,21 +72,23 @@
             </Grid.ColumnDefinitions>
 
             <Border Background="#FFDD4B39" Grid.Column="0" Grid.Row="0"/>
-            <Button BorderThickness="0" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Click="ShareGoogle_Click">
+            <Button BorderThickness="0" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Button.Background>
-                    <ImageBrush ImageSource="ms-appx:/Assets/googleplus-icon@2x.png" Stretch="Uniform"/>
+                    <ImageBrush ImageSource="ms-appx:/Assets/googleplus-icon@2x.png" Stretch="None"/>
                 </Button.Background>
             </Button>
+            
             <Border Background="#FF014E7C" Grid.Column="1" Grid.Row="1"/>
-            <Button BorderThickness="0" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" Click="ShareKeycloak_Click">
+            <Button BorderThickness="0" Grid.Column="1" Grid.Row="1" Click="ShareKeycloak_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Button.Background>
-                    <ImageBrush ImageSource="Assets/keycloack-icon@2x.png" Stretch="Uniform"/>
+                    <ImageBrush ImageSource="Assets/keycloack-icon@2x.png" Stretch="None"/>
                 </Button.Background>
             </Button>
+            
             <Border Background="#FF3B5998" Grid.Column="2" Grid.Row="2"/>
-            <Button BorderThickness="0" Grid.Column="2" Grid.Row="2" HorizontalAlignment="Center" Click="ShareFacebook_Click">
+            <Button BorderThickness="0" Grid.Column="2" Grid.Row="2" Click="ShareFacebook_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Button.Background>
-                    <ImageBrush ImageSource="Assets/facebook-icon@2x.png" Stretch="Uniform"/>
+                    <ImageBrush ImageSource="Assets/facebook-icon@2x.png" Stretch="None"/>
                 </Button.Background>
             </Button>
         </Grid>
