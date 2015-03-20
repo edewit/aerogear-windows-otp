@@ -23,12 +23,11 @@ namespace AeroGear.OTP
 
         public virtual long CurrentInterval
         {
-            //get
-            //{
-            //    long currentTimeSeconds = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond / 1000;
-            //    return currentTimeSeconds / interval;
-            //}
-            get { return 1033; }
+            get
+            {
+                long currentTimeSeconds = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond / 1000;
+                return currentTimeSeconds / interval;
+            }
         }
     }
 }

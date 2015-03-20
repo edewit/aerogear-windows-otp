@@ -92,15 +92,9 @@ namespace AeroGear.OTP
 
         private int hash(string secret, long interval)
         {
-            var Timestamp = GetUnixTimestamp();
             byte[] data = Base32Encoding.ToBytes(secret);
-            var hash = new HMACSHA1(data).ComputeHash(BitConverter.GetBytes(Timestamp).Reverse().ToArray());
+            var hash = new HMACSHA1(data).ComputeHash(BitConverter.GetBytes(interval).Reverse().ToArray());
             return bytesToInt(hash);
-        }
-
-        private static Int64 GetUnixTimestamp()
-        {
-            return 1033;//Convert.ToInt64(Math.Round((DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalMilliseconds));
         }
 
         private int bytesToInt(byte[] hash)
