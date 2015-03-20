@@ -57,6 +57,19 @@ namespace AeroGear.OTP
             Assert.AreEqual(26, value);
         }
 
+        [TestMethod]
+        public void EncodeDecode()
+        {
+            //given
+            string code = "THECODE2";
+
+            //when
+            var encoded = Base32Encoding.ToBytes(code);
+            var decoded = Base32Encoding.ToString(encoded);
+
+            //then
+            Assert.AreEqual(code, decoded);
+        }
     }
 
     public class Base32EncodingTest : Base32Encoding

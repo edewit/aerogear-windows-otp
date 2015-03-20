@@ -19,7 +19,7 @@ namespace AeroGear.OTP
             }
 
             input = input.TrimEnd('=').ToUpper();
-            int byteCount = input.Length * 5 / 8;
+            int byteCount = input.Length * SHIFT / 8;
             byte[] returnArray = new byte[byteCount];
 
             int buffer = 0;
@@ -50,36 +50,41 @@ namespace AeroGear.OTP
                 throw new ArgumentNullException("input");
             }
 
-            int charCount = (int)Math.Ceiling(input.Length / 5d) * 8;
-            char[] returnArray = new char[charCount];
-
-            byte nextChar = 0, bitsRemaining = 5;
-            int arrayIndex = 0;
-
-            foreach (byte b in input)
+            if (input.Length >= (1 << 28))
             {
-                nextChar = (byte)(nextChar | (b >> (8 - bitsRemaining)));
-                returnArray[arrayIndex++] = ValueToChar(nextChar);
+                // The computation below will fail, so don't do it.
+                throw new System.ArgumentException();
+            }
 
-                if (bitsRemaining < 4)
+            int outputLength = (input.Length * 8 + SHIFT - 1) / SHIFT;
+            StringBuilder result = new StringBuilder(outputLength);
+
+            int buffer = input[0];
+            int next = 1;
+            int bitsLeft = 8;
+            while (bitsLeft > 0 || next < input.Length)
+            {
+                if (bitsLeft < SHIFT)
                 {
-                    nextChar = (byte)((b >> (3 - bitsRemaining)) & 31);
-                    returnArray[arrayIndex++] = ValueToChar(nextChar);
-                    bitsRemaining += 5;
+                    if (next < input.Length)
+                    {
+                        buffer <<= 8;
+                        buffer |= (input[next++] & 0xff);
+                        bitsLeft += 8;
+                    }
+                    else
+                    {
+                        int pad = SHIFT - bitsLeft;
+                        buffer <<= pad;
+                        bitsLeft += pad;
+                    }
                 }
-
-                bitsRemaining -= 3;
-                nextChar = (byte)((b << bitsRemaining) & 31);
+                int index = MASK & (buffer >> (bitsLeft - SHIFT));
+                bitsLeft -= SHIFT;
+                result.Append(ValueToChar(index));
             }
 
-            //if we didn't end with a full char
-            if (arrayIndex != charCount)
-            {
-                returnArray[arrayIndex++] = ValueToChar(nextChar);
-                while (arrayIndex != charCount) returnArray[arrayIndex++] = '='; //padding
-            }
-
-            return new string(returnArray);
+            return result.ToString();
         }
 
         protected static int CharToValue(char c)
@@ -98,11 +103,11 @@ namespace AeroGear.OTP
             throw new ArgumentException("Character is not a Base32 character.", "" + c);
         }
 
-        private static char ValueToChar(byte b)
+        private static char ValueToChar(int b)
         {
             if (b < 26)
             {
-                return (char)(b + 65);
+                return (char)(b + 'A');
             }
 
             if (b < 32)
