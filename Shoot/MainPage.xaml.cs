@@ -153,7 +153,7 @@ namespace Shoot
                 case ApplicationViewOrientation.Landscape:
                     grid.RowDefinitions.Clear();
                     grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
-                    grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(177) });
+                    grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(153) });
                     shareBar.ColumnDefinitions.Clear();
                     for (int i = 0; i < 3; i++)
                         shareBar.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) });
@@ -162,7 +162,7 @@ namespace Shoot
                 case ApplicationViewOrientation.Portrait:
                     grid.ColumnDefinitions.Clear();
                     grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) });
-                    grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(177) });
+                    grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(153) });
                     shareBar.RowDefinitions.Clear();
                     for (int i = 0; i < 3; i++)
                         shareBar.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
