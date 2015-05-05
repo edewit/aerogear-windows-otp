@@ -5,7 +5,9 @@ using System.Text;
 
 namespace AeroGear.OTP
 {
-
+    /// <summary>
+    /// A clock that ticks every 30 seconds a different tick
+    /// </summary>
     public class Clock
     {
 

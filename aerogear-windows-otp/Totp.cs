@@ -56,16 +56,14 @@ namespace AeroGear.OTP
         /// Verifier - To be used only on the server side
         /// <p/>
         /// Taken from Google Authenticator with small modifications from </summary>
-        /// {<seealso cref= <a href="http://code.google.com/p/google-authenticator/source/browse/src/com/google/android/apps/authenticator/PasscodeGenerator.java?repo=android#212">PasscodeGenerator.java</a>}
+        /// {<a href="http://code.google.com/p/google-authenticator/source/browse/src/com/google/android/apps/authenticator/PasscodeGenerator.java?repo=android#212">PasscodeGenerator.java</a>}
         /// <p/>
         /// Verify a timeout code. The timeout code will be valid for a time
         /// determined by the interval period and the number of adjacent intervals
         /// checked.
         /// </seealso>
         /// <param name="otp"> Timeout code </param>
-        /// <returns> True if the timeout code is valid
-        ///         <p/>
-        ///         Author: sweis@google.com (Steve Weis) </returns>
+        /// <returns> True if the timeout code is valid</returns>
         public virtual bool verify(string otp)
         {
 

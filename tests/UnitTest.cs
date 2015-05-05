@@ -9,12 +9,12 @@ namespace AeroGear.OTP
         [TestMethod]
         public void Test()
         {
-            String secret = "NVQJA2PKONYYZNFFJ5LBGHRVPID5R7X5G6G2CZAZSCW6TUD3KDTA";
+            String secret = "SECRETCODE";
             Totp totp = new Totp(secret, new StaticClock());
 
             string now = totp.now();
 
-            Assert.AreEqual("312921", now); 
+            Assert.AreEqual("255760", now); 
             totp.verify(now);
         }
 
@@ -86,7 +86,7 @@ namespace AeroGear.OTP
         {
             get
             {
-                return 1033;
+                return 1;
             }
         }
     }
