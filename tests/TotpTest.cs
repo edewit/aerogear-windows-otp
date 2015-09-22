@@ -1,20 +1,20 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 
 namespace AeroGear.OTP
 {
     [TestClass]
-    public class UnitTest1
+    public class TotpTest
     {
         [TestMethod]
-        public void Test()
+        public void ShouldGenerateRightCode()
         {
-            String secret = "SECRETCODE";
+            String secret = "R5MB5FAQNX5UIPWL";
             Totp totp = new Totp(secret, new StaticClock());
 
             string now = totp.now();
 
-            Assert.AreEqual("255760", now); 
+            Assert.AreEqual("002941", now); 
             totp.verify(now);
         }
 
@@ -76,17 +76,17 @@ namespace AeroGear.OTP
     {
         public static int testCharToValue(char c)
         {
-            return Base32Encoding.CharToValue(c);
+            return CharToValue(c);
         }
     }
 
-    public class StaticClock : Clock
+    internal class StaticClock : Clock
     {
         public override long CurrentInterval
         {
             get
             {
-                return 1;
+                return 45187109L;
             }
         }
     }
