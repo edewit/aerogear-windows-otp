@@ -19,6 +19,20 @@ namespace AeroGear.OTP
         }
 
         [TestMethod]
+        public void TestClock()
+        {
+            //given
+            var clock = new Clock(1);
+
+            //when
+            var interval = clock.CurrentInterval;
+
+            //then
+            //interval is bigger then the one from now
+            Assert.IsTrue(interval > 1443013417L);
+        }
+
+        [TestMethod]
         public void CharAToInt()
         {
             //given
