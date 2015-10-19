@@ -1,107 +1,146 @@
-﻿using System;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+﻿using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 
 namespace AeroGear.OTP
 {
-    [TestClass]
-    public class TotpTest
-    {
-        [TestMethod]
-        public void ShouldGenerateRightCode()
-        {
-            String secret = "R5MB5FAQNX5UIPWL";
-            Totp totp = new Totp(secret, new StaticClock());
+	[TestClass]
+	public class TotpTest
+	{
+		private string secret;
 
-            string now = totp.now();
+		[TestInitialize]
+		public void TestInitializer()
+		{
+			secret = "R5MB5FAQNX5UIPWL";
+		}
 
-            Assert.AreEqual("002941", now); 
-            totp.verify(now);
-        }
+		[TestMethod]
+		public void ShouldGenerateRightCode()
+		{
+			Totp totp = new Totp(secret, new StaticClock());
 
-        [TestMethod]
-        public void TestClock()
-        {
-            //given
-            var clock = new Clock(1);
+			string now = totp.now();
 
-            //when
-            var interval = clock.CurrentInterval;
+			Assert.AreEqual("002941", now);
+			totp.verify(now);
+		}
 
-            //then
-            //interval is bigger then the one from now
-            Assert.IsTrue(interval > 1443013417L);
-        }
+		[TestMethod]
+		public void ShouldGenerateRightCodeSixDigits()
+		{
+			Totp totp = new Totp(secret, new StaticClock(), Totp.Digits.Six);
 
-        [TestMethod]
-        public void CharAToInt()
-        {
-            //given
-            char a = 'A';
+			string now = totp.now();
 
-            //when
-            var value = Base32EncodingTest.testCharToValue(a);
+			Assert.AreEqual("002941", now);
+			totp.verify(now);
+		}
 
-            //then
-            Assert.AreEqual(0, value);
-        }
+		[TestMethod]
+		public void ShouldGenerateRightCodeSevenDigits()
+		{
+			Totp totp = new Totp(secret, new StaticClock(), Totp.Digits.Seven);
 
-        [TestMethod]
-        public void CharZToInt()
-        {
-            //given
-            char z = 'Z';
+			string now = totp.now();
 
-            //when
-            var value = Base32EncodingTest.testCharToValue(z);
+			Assert.AreEqual("3002941", now);
+			totp.verify(now);
+		}
 
-            //then
-            Assert.AreEqual(25, value);
-        }
+		[TestMethod]
+		public void ShouldGenerateRightCodeEight()
+		{
+			Totp totp = new Totp(secret, new StaticClock(), Totp.Digits.Eight);
 
-        [TestMethod]
-        public void Char2ToInt()
-        {
-            //given
-            char two = '2';
+			string now = totp.now();
 
-            //when
-            var value = Base32EncodingTest.testCharToValue(two);
+			Assert.AreEqual("83002941", now);
+			totp.verify(now);
+		}
 
-            //then
-            Assert.AreEqual(26, value);
-        }
+		[TestMethod]
+		public void TestClock()
+		{
+			//given
+			var clock = new Clock(1);
 
-        [TestMethod]
-        public void EncodeDecode()
-        {
-            //given
-            string code = "THECODE2";
+			//when
+			var interval = clock.CurrentInterval;
 
-            //when
-            var encoded = Base32Encoding.ToBytes(code);
-            var decoded = Base32Encoding.ToString(encoded);
+			//then
+			//interval is bigger then the one from now
+			Assert.IsTrue(interval > 1443013417L);
+		}
 
-            //then
-            Assert.AreEqual(code, decoded);
-        }
-    }
+		[TestMethod]
+		public void CharAToInt()
+		{
+			//given
+			char a = 'A';
 
-    public class Base32EncodingTest : Base32Encoding
-    {
-        public static int testCharToValue(char c)
-        {
-            return CharToValue(c);
-        }
-    }
+			//when
+			var value = Base32EncodingTest.testCharToValue(a);
 
-    internal class StaticClock : Clock
-    {
-        public override long CurrentInterval
-        {
-            get
-            {
-                return 45187109L;
-            }
-        }
-    }
+			//then
+			Assert.AreEqual(0, value);
+		}
+
+		[TestMethod]
+		public void CharZToInt()
+		{
+			//given
+			char z = 'Z';
+
+			//when
+			var value = Base32EncodingTest.testCharToValue(z);
+
+			//then
+			Assert.AreEqual(25, value);
+		}
+
+		[TestMethod]
+		public void Char2ToInt()
+		{
+			//given
+			char two = '2';
+
+			//when
+			var value = Base32EncodingTest.testCharToValue(two);
+
+			//then
+			Assert.AreEqual(26, value);
+		}
+
+		[TestMethod]
+		public void EncodeDecode()
+		{
+			//given
+			string code = "THECODE2";
+
+			//when
+			var encoded = Base32Encoding.ToBytes(code);
+			var decoded = Base32Encoding.ToString(encoded);
+
+			//then
+			Assert.AreEqual(code, decoded);
+		}
+	}
+
+	public class Base32EncodingTest : Base32Encoding
+	{
+		public static int testCharToValue(char c)
+		{
+			return CharToValue(c);
+		}
+	}
+
+	internal class StaticClock : Clock
+	{
+		public override long CurrentInterval
+		{
+			get
+			{
+				return 45187109L;
+			}
+		}
+	}
 }
