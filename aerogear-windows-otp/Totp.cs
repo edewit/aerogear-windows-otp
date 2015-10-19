@@ -35,11 +35,8 @@ namespace AeroGear.OTP
         /// </summary>
         /// <param name="secret"> Shared secret </param>
         /// <param name="digits"> Number of digits of generated OTP codes </param>
-        public Totp(string secret, Digits digits = Digits.Six)
+        public Totp(string secret, Digits digits = Digits.Six) : this(secret, new Clock(), digits)
         {
-            this.secret = secret;
-            clock = new Clock();
-            this.digits = (int)digits;
         }
 
         /// <summary>
@@ -48,9 +45,11 @@ namespace AeroGear.OTP
         /// <param name="secret"> Shared secret </param>
         /// <param name="clock">  Clock responsible for retrieve the current interval </param>
         /// <param name="digits"> Number of digits of generated OTP codes </param>
-        public Totp(string secret, Clock clock, Digits digits = Digits.Six) : this(secret, digits)
+        public Totp(string secret, Clock clock, Digits digits = Digits.Six)
         {
+            this.secret = secret;
             this.clock = clock;
+            this.digits = (int)digits;
         }
 
         /// <summary>
