@@ -25,6 +25,61 @@ namespace AeroGear.OTP
         }
 
         [TestMethod]
+        public void ShouldGenerateRightCodeOneDigits()
+        {
+            Totp totp = new Totp(secret, new StaticClock(), Totp.Digits.One);
+
+            string now = totp.now();
+
+            Assert.AreEqual("1", now);
+            totp.verify(now);
+        }
+
+        [TestMethod]
+        public void ShouldGenerateRightCodeTwoDigits()
+        {
+            Totp totp = new Totp(secret, new StaticClock(), Totp.Digits.Two);
+
+            string now = totp.now();
+
+            Assert.AreEqual("41", now);
+            totp.verify(now);
+        }
+
+        [TestMethod]
+        public void ShouldGenerateRightCodeThreeDigits()
+        {
+            Totp totp = new Totp(secret, new StaticClock(), Totp.Digits.Three);
+
+            string now = totp.now();
+
+            Assert.AreEqual("941", now);
+            totp.verify(now);
+        }
+
+        [TestMethod]
+        public void ShouldGenerateRightCodeFourDigits()
+        {
+            Totp totp = new Totp(secret, new StaticClock(), Totp.Digits.Four);
+
+            string now = totp.now();
+
+            Assert.AreEqual("2941", now);
+            totp.verify(now);
+        }
+
+        [TestMethod]
+        public void ShouldGenerateRightCodeFiveDigits()
+        {
+            Totp totp = new Totp(secret, new StaticClock(), Totp.Digits.Five);
+
+            string now = totp.now();
+
+            Assert.AreEqual("02941", now);
+            totp.verify(now);
+        }
+
+        [TestMethod]
         public void ShouldGenerateRightCodeSixDigits()
         {
             Totp totp = new Totp(secret, new StaticClock(), Totp.Digits.Six);
@@ -47,13 +102,35 @@ namespace AeroGear.OTP
         }
 
         [TestMethod]
-        public void ShouldGenerateRightCodeEight()
+        public void ShouldGenerateRightCodeEightDigits()
         {
             Totp totp = new Totp(secret, new StaticClock(), Totp.Digits.Eight);
 
             string now = totp.now();
 
             Assert.AreEqual("83002941", now);
+            totp.verify(now);
+        }
+
+        [TestMethod]
+        public void ShouldGenerateRightCodeNineDigits()
+        {
+            Totp totp = new Totp(secret, new StaticClock(), Totp.Digits.Nine);
+
+            string now = totp.now();
+
+            Assert.AreEqual("783002941", now);
+            totp.verify(now);
+        }
+
+        [TestMethod]
+        public void ShouldGenerateRightCodeTenDigits()
+        {
+            Totp totp = new Totp(secret, new StaticClock(), Totp.Digits.Ten);
+
+            string now = totp.now();
+
+            Assert.AreEqual("1783002941", now);
             totp.verify(now);
         }
 

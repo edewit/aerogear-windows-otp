@@ -8,13 +8,21 @@ namespace AeroGear.OTP
     {
         public enum Digits
         {
+            One = 1,
+            Two = 2,
+            Three = 3,
+            Four = 4,
+            Five = 5,
             Six = 6,
             Seven = 7,
-            Eight = 8
+            Eight = 8,
+            Nine = 9,
+            Ten = 10
         }
 
         private const int DELAY_WINDOW = 1;
-        private readonly int[] DIGITS_POWER = {
+
+        private readonly long[] DIGITS_POWER = {
             1 /*0*/,
             10 /*1*/,
             100 /*2*/,
@@ -23,9 +31,10 @@ namespace AeroGear.OTP
             100000 /*5*/,
             1000000 /*6*/,
             10000000 /*7*/,
-            100000000 /*8*/
+            100000000 /*8*/,
+            1000000000 /*9*/,
+            10000000000 /*10*/
         };
-
         private readonly string secret;
         private readonly Clock clock;
         private readonly int digits;
@@ -121,7 +130,8 @@ namespace AeroGear.OTP
                 | ((hash[offset + 2] & 0xff) << 8)
                 | (hash[offset + 3] & 0xff);
 
-            return binary % DIGITS_POWER[digits];
+            // there should be no integer overflow here, since `binary` is an integer itself
+            return (int)(binary % DIGITS_POWER[digits]);
         }
 
         private string leftPadding(int otp)
