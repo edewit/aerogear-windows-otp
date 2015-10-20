@@ -25,7 +25,7 @@ namespace AeroGear.OTP
         }
 
         [TestMethod]
-        public void ShouldGenerateRightCodeOneDigits()
+        public void ShouldGenerateRightCodeOneDigit()
         {
             Totp totp = new Totp(secret, new StaticClock(), Digits.One);
 
