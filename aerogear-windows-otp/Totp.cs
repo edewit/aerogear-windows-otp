@@ -8,22 +8,9 @@ namespace AeroGear.OTP
     {
         private const int DELAY_WINDOW = 1;
 
-        private readonly long[] DIGITS_POWER = {
-            1 /*0*/,
-            10 /*1*/,
-            100 /*2*/,
-            1000 /*3*/,
-            10000 /*4*/,
-            100000 /*5*/,
-            1000000 /*6*/,
-            10000000 /*7*/,
-            100000000 /*8*/,
-            1000000000 /*9*/,
-            10000000000 /*10*/
-        };
         private readonly string secret;
         private readonly Clock clock;
-        private readonly int digits;
+        private readonly Digits digits;
 
         /// <summary>
         /// Initialize an OTP instance with the shared secret generated on Registration process
@@ -44,7 +31,7 @@ namespace AeroGear.OTP
         {
             this.secret = secret;
             this.clock = clock;
-            this.digits = (int)digits;
+            this.digits = digits;
         }
 
         /// <summary>
@@ -117,14 +104,12 @@ namespace AeroGear.OTP
                 | (hash[offset + 3] & 0xff);
 
             // there should be no integer overflow here, since `binary` is an integer itself
-            return (int)(binary % DIGITS_POWER[digits]);
+            return (int)(binary % digits.GetDivisor());
         }
 
         private string leftPadding(int otp)
         {
-            string formatString = $"{{0:D{ digits }}}";
-
-            return string.Format(formatString, otp);
+            return string.Format(digits.GetFormat(), otp);
         }
     }
 }
