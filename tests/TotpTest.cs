@@ -27,7 +27,7 @@ namespace AeroGear.OTP
         [TestMethod]
         public void ShouldGenerateRightCodeOneDigits()
         {
-            Totp totp = new Totp(secret, new StaticClock(), Totp.Digits.One);
+            Totp totp = new Totp(secret, new StaticClock(), Digits.One);
 
             string now = totp.now();
 
@@ -38,7 +38,7 @@ namespace AeroGear.OTP
         [TestMethod]
         public void ShouldGenerateRightCodeTwoDigits()
         {
-            Totp totp = new Totp(secret, new StaticClock(), Totp.Digits.Two);
+            Totp totp = new Totp(secret, new StaticClock(), Digits.Two);
 
             string now = totp.now();
 
@@ -49,7 +49,7 @@ namespace AeroGear.OTP
         [TestMethod]
         public void ShouldGenerateRightCodeThreeDigits()
         {
-            Totp totp = new Totp(secret, new StaticClock(), Totp.Digits.Three);
+            Totp totp = new Totp(secret, new StaticClock(), Digits.Three);
 
             string now = totp.now();
 
@@ -60,7 +60,7 @@ namespace AeroGear.OTP
         [TestMethod]
         public void ShouldGenerateRightCodeFourDigits()
         {
-            Totp totp = new Totp(secret, new StaticClock(), Totp.Digits.Four);
+            Totp totp = new Totp(secret, new StaticClock(), Digits.Four);
 
             string now = totp.now();
 
@@ -71,7 +71,7 @@ namespace AeroGear.OTP
         [TestMethod]
         public void ShouldGenerateRightCodeFiveDigits()
         {
-            Totp totp = new Totp(secret, new StaticClock(), Totp.Digits.Five);
+            Totp totp = new Totp(secret, new StaticClock(), Digits.Five);
 
             string now = totp.now();
 
@@ -82,7 +82,7 @@ namespace AeroGear.OTP
         [TestMethod]
         public void ShouldGenerateRightCodeSixDigits()
         {
-            Totp totp = new Totp(secret, new StaticClock(), Totp.Digits.Six);
+            Totp totp = new Totp(secret, new StaticClock(), Digits.Six);
 
             string now = totp.now();
 
@@ -93,7 +93,7 @@ namespace AeroGear.OTP
         [TestMethod]
         public void ShouldGenerateRightCodeSevenDigits()
         {
-            Totp totp = new Totp(secret, new StaticClock(), Totp.Digits.Seven);
+            Totp totp = new Totp(secret, new StaticClock(), Digits.Seven);
 
             string now = totp.now();
 
@@ -104,7 +104,7 @@ namespace AeroGear.OTP
         [TestMethod]
         public void ShouldGenerateRightCodeEightDigits()
         {
-            Totp totp = new Totp(secret, new StaticClock(), Totp.Digits.Eight);
+            Totp totp = new Totp(secret, new StaticClock(), Digits.Eight);
 
             string now = totp.now();
 
@@ -115,7 +115,7 @@ namespace AeroGear.OTP
         [TestMethod]
         public void ShouldGenerateRightCodeNineDigits()
         {
-            Totp totp = new Totp(secret, new StaticClock(), Totp.Digits.Nine);
+            Totp totp = new Totp(secret, new StaticClock(), Digits.Nine);
 
             string now = totp.now();
 
@@ -126,7 +126,7 @@ namespace AeroGear.OTP
         [TestMethod]
         public void ShouldGenerateRightCodeTenDigits()
         {
-            Totp totp = new Totp(secret, new StaticClock(), Totp.Digits.Ten);
+            Totp totp = new Totp(secret, new StaticClock(), Digits.Ten);
 
             string now = totp.now();
 
