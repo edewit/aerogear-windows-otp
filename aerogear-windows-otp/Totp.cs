@@ -6,18 +6,19 @@ namespace AeroGear.OTP
 {
     public class Totp
     {
+        private const int DELAY_WINDOW = 1;
+
         private readonly string secret;
         private readonly Clock clock;
-        private const int DELAY_WINDOW = 1;
+        private readonly Digits digits;
 
         /// <summary>
         /// Initialize an OTP instance with the shared secret generated on Registration process
         /// </summary>
         /// <param name="secret"> Shared secret </param>
-        public Totp(string secret)
+        /// <param name="digits"> Number of digits of generated OTP codes </param>
+        public Totp(string secret, Digits digits = Digits.Six) : this(secret, new Clock(), digits)
         {
-            this.secret = secret;
-            clock = new Clock();
         }
 
         /// <summary>
@@ -25,10 +26,12 @@ namespace AeroGear.OTP
         /// </summary>
         /// <param name="secret"> Shared secret </param>
         /// <param name="clock">  Clock responsible for retrieve the current interval </param>
-        public Totp(string secret, Clock clock)
+        /// <param name="digits"> Number of digits of generated OTP codes </param>
+        public Totp(string secret, Clock clock, Digits digits = Digits.Six)
         {
             this.secret = secret;
             this.clock = clock;
+            this.digits = digits;
         }
 
         /// <summary>
@@ -95,17 +98,18 @@ namespace AeroGear.OTP
             // put selected bytes into result int
             int offset = hash.Last() & 0x0f;
 
-            int binary = ((hash[offset] & 0x7f) << 24) 
-                | ((hash[offset + 1] & 0xff) << 16) 
-                | ((hash[offset + 2] & 0xff) << 8) 
+            int binary = ((hash[offset] & 0x7f) << 24)
+                | ((hash[offset + 1] & 0xff) << 16)
+                | ((hash[offset + 2] & 0xff) << 8)
                 | (hash[offset + 3] & 0xff);
 
-            return binary % 1000000;
+            // there should be no integer overflow here, since `binary` is an integer itself
+            return (int)(binary % digits.GetDivisor());
         }
 
         private string leftPadding(int otp)
         {
-            return string.Format("{0:D6}", otp);
+            return string.Format(digits.GetFormat(), otp);
         }
     }
 }
