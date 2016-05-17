@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aerogear-windows-otp", "aerogear-windows-otp\aerogear-windows-otp.csproj", "{1115CDF8-0715-4BF2-BB94-0016E5E99C87}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests", "tests\tests.csproj", "{FDF650DB-0ECC-4837-A549-B2BA24A0F77B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redhat-otp", "redhat-otp\redhat-otp.csproj", "{A5F9A0AA-3825-4681-96BA-0B31A0058DA1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,26 @@ Global
 		{FDF650DB-0ECC-4837-A549-B2BA24A0F77B}.Release|x86.ActiveCfg = Release|x86
 		{FDF650DB-0ECC-4837-A549-B2BA24A0F77B}.Release|x86.Build.0 = Release|x86
 		{FDF650DB-0ECC-4837-A549-B2BA24A0F77B}.Release|x86.Deploy.0 = Release|x86
+		{A5F9A0AA-3825-4681-96BA-0B31A0058DA1}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{A5F9A0AA-3825-4681-96BA-0B31A0058DA1}.Debug|ARM.ActiveCfg = Debug|ARM
+		{A5F9A0AA-3825-4681-96BA-0B31A0058DA1}.Debug|ARM.Build.0 = Debug|ARM
+		{A5F9A0AA-3825-4681-96BA-0B31A0058DA1}.Debug|ARM.Deploy.0 = Debug|ARM
+		{A5F9A0AA-3825-4681-96BA-0B31A0058DA1}.Debug|x64.ActiveCfg = Debug|x64
+		{A5F9A0AA-3825-4681-96BA-0B31A0058DA1}.Debug|x64.Build.0 = Debug|x64
+		{A5F9A0AA-3825-4681-96BA-0B31A0058DA1}.Debug|x64.Deploy.0 = Debug|x64
+		{A5F9A0AA-3825-4681-96BA-0B31A0058DA1}.Debug|x86.ActiveCfg = Debug|x86
+		{A5F9A0AA-3825-4681-96BA-0B31A0058DA1}.Debug|x86.Build.0 = Debug|x86
+		{A5F9A0AA-3825-4681-96BA-0B31A0058DA1}.Debug|x86.Deploy.0 = Debug|x86
+		{A5F9A0AA-3825-4681-96BA-0B31A0058DA1}.Release|Any CPU.ActiveCfg = Release|x86
+		{A5F9A0AA-3825-4681-96BA-0B31A0058DA1}.Release|ARM.ActiveCfg = Release|ARM
+		{A5F9A0AA-3825-4681-96BA-0B31A0058DA1}.Release|ARM.Build.0 = Release|ARM
+		{A5F9A0AA-3825-4681-96BA-0B31A0058DA1}.Release|ARM.Deploy.0 = Release|ARM
+		{A5F9A0AA-3825-4681-96BA-0B31A0058DA1}.Release|x64.ActiveCfg = Release|x64
+		{A5F9A0AA-3825-4681-96BA-0B31A0058DA1}.Release|x64.Build.0 = Release|x64
+		{A5F9A0AA-3825-4681-96BA-0B31A0058DA1}.Release|x64.Deploy.0 = Release|x64
+		{A5F9A0AA-3825-4681-96BA-0B31A0058DA1}.Release|x86.ActiveCfg = Release|x86
+		{A5F9A0AA-3825-4681-96BA-0B31A0058DA1}.Release|x86.Build.0 = Release|x86
+		{A5F9A0AA-3825-4681-96BA-0B31A0058DA1}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
